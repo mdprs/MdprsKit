@@ -65,6 +65,13 @@ final class ParserSpec: QuickSpec {
         expect(speakerNotes.count).to(equal(1))
         expect(String(speakerNotes[0])).to(equal("<p>This are the speaker notes:</p><ul><li>item 1</li><li>item 2</li></ul>"))
       }
+
+      it("The slide deck is rendered successfully") {
+        let html = try presentation!.render()
+        let slides = html.substrings(between: "<section>", and: "</section>")
+
+        expect(slides.count).to(equal(2))
+      }
     }
 
   }

@@ -16,6 +16,7 @@ let package = Package(
     .package(url: "https://github.com/JohnSundell/Ink", from: "0.5.1"),
     .package(url: "https://github.com/JohnSundell/Files", from: "4.2.0"),
     .package(url: "https://github.com/JohnSundell/Sweep", from: "0.4.0"),
+    .package(url: "https://github.com/stencilproject/Stencil", from: "0.14.2"),
 
     // -- Testing --
     .package(url: "https://github.com/Quick/Quick", from: "5.0.0"),
@@ -29,7 +30,11 @@ let package = Package(
       dependencies: [
         "Files",
         "Ink",
+        "Stencil",
         "Sweep",
+      ],
+      resources: [
+        .copy("reveal.js")
       ]),
     .testTarget(
       name: "mdprsKitTests",

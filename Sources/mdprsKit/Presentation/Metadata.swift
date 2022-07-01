@@ -1,8 +1,8 @@
 //
-//  Presentation.swift
+//  Metadata.swift
 //  mdprsKit
 //
-//  Created by Thomas Bonk on 25.06.22.
+//  Created by Thomas Bonk on 27.06.22.
 //  Copyright 2022 Thomas Bonk <thomas@meandmymac.de>
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,10 +20,24 @@
 
 import Foundation
 
-public struct Presentation {
+public struct Metadata {
 
   // MARK: - Public Properties
 
-  public let metadata: Metadata
-  public let slides: [String]
+  public let title: String
+  public let author: String
+  public let description: String
+  public let language: String
+  public let theme: String
+
+
+  // MARK: - Initialization
+
+  public init(from dictionary: [String : String]) {
+    self.title = dictionary["title"] ?? ""
+    self.author = dictionary["author"] ?? ""
+    self.description = dictionary["description"] ?? ""
+    self.language = dictionary["language"] ?? "en"
+    self.theme = dictionary["theme"] ?? "white"
+  }
 }
