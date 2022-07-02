@@ -45,8 +45,8 @@ public class SlidedeckService {
 
   // MARK: - Initialization
 
-  public init() {
-    configure(server)
+  public init(custom mapping: [(path: String, mappedTo: String)] = []) {
+    configure(server, custom: mapping)
   }
 
 
@@ -59,10 +59,11 @@ public class SlidedeckService {
 
   // MARK: - Private Methods
 
-  private func configure(_ server: HttpServer) {
+  private func configure(_ server: HttpServer, custom mapping: [(path: String, mappedTo: String)]) {
     server.listenAddressIPv4 = "0.0.0.0"
 
     server["/"] = renderSlideDeck(request:)
+    expose(custom: mapping, to: server)
     exposeFiles(to: server)
     server["/notification"] = websocket(connected: { session in
       self.webSocketSessions.append(session)
@@ -79,6 +80,12 @@ public class SlidedeckService {
       return .ok(.htmlBody(html))
     } catch {
       return .internalServerError
+    }
+  }
+
+  private func expose(custom mapping: [(path: String, mappedTo: String)], to server: HttpServer) {
+    mapping.forEach { (path: String, mappedTo: String) in
+      exposeFiles(from: path, pathPrefix: mappedTo, to: server)
     }
   }
 
