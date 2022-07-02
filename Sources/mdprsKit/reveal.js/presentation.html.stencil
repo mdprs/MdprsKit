@@ -24,6 +24,17 @@
 
   <body>
 
+    <script>
+      var socket = new WebSocket("wss:///notification");
+
+      socket.onmessage = function(event) {
+        if (event.data === "UPDATE") {
+          socket.close();
+          window.location.reload(true);
+        }
+      };
+    </script>
+
     <div class="reveal">
       <!-- Any section element inside of this container is displayed as a slide -->
       <div class="slides">

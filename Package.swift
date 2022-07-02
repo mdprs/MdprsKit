@@ -5,6 +5,9 @@ import PackageDescription
 
 let package = Package(
   name: "mdprsKit",
+  platforms: [
+    .macOS(.v12),
+  ],
   products: [
     // Products define the executables and libraries a package produces, and make them visible to other packages.
     .library(
@@ -17,6 +20,7 @@ let package = Package(
     .package(url: "https://github.com/JohnSundell/Files", from: "4.2.0"),
     .package(url: "https://github.com/JohnSundell/Sweep", from: "0.4.0"),
     .package(url: "https://github.com/stencilproject/Stencil", from: "0.14.2"),
+    .package(url: "https://github.com/httpswift/swifter", from: "1.5.0"),
 
     // -- Testing --
     .package(url: "https://github.com/Quick/Quick", from: "5.0.0"),
@@ -32,6 +36,7 @@ let package = Package(
         "Ink",
         "Stencil",
         "Sweep",
+        .product(name: "Swifter", package: "swifter"),
       ],
       resources: [
         .copy("reveal.js")
