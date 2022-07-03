@@ -1,3 +1,3 @@
 # mdprsKit
 
-A description of this package.
+Presentation framework for mdprs, the Markdown Presenter.
