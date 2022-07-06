@@ -76,8 +76,12 @@ public class SlidedeckService {
     do {
       let presentation = parser.parse(markdown: slidedeck)
       let html = try presentation.render()
+      let headers = [
+        "Content-Type": "text/html",
+        "Cache-Control": "no-cache"
+      ]
 
-      return .ok(.htmlBody(html))
+      return .raw(200, html, headers, nil)
     } catch {
       return .internalServerError
     }
