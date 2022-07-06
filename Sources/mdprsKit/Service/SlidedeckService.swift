@@ -34,6 +34,7 @@ public class SlidedeckService {
       }
     }
   }
+  public private(set) var isRunning = false
 
 
   // MARK: - Private Properties
@@ -54,6 +55,16 @@ public class SlidedeckService {
 
   public func start() throws {
     try server.start(self.port, forceIPv4: true, priority: .background)
+    isRunning = true
+  }
+
+  public func stop() {
+    guard !isRunning else {
+      return
+    }
+
+    server.stop()
+    isRunning = false
   }
 
 
