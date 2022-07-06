@@ -50,6 +50,10 @@ public class SlidedeckService {
     configure(server, custom: mapping)
   }
 
+  deinit {
+    stop()
+  }
+
 
   // MARK: - Public Methods
 
