@@ -25,7 +25,7 @@
   <body>
 
     <script>
-      var socket = new WebSocket("wss:///notification");
+      var socket = new WebSocket("ws://" + window.location.hostname + ":" + window.location.port + "/notification");
 
       socket.onmessage = function(event) {
         if (event.data === "UPDATE") {

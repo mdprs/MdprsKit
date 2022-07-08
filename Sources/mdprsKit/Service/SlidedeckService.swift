@@ -46,8 +46,8 @@ public class SlidedeckService {
 
   // MARK: - Initialization
 
-  public init(custom mapping: [(path: String, mappedTo: String)] = []) {
-    configure(server, custom: mapping)
+  public init() {
+    configure(server)
   }
 
   deinit {
@@ -74,12 +74,11 @@ public class SlidedeckService {
 
   // MARK: - Private Methods
 
-  private func configure(_ server: HttpServer, custom mapping: [(path: String, mappedTo: String)]) {
+  private func configure(_ server: HttpServer) {
     server.listenAddressIPv4 = "0.0.0.0"
 
     server["/"] = renderSlideDeck(request:)
-    expose(custom: mapping, to: server)
-    exposeFiles(to: server)
+    exposeBundledFiles(to: server)
     server["/notification"] = websocket(connected: { session in
       self.webSocketSessions.append(session)
     }, disconnected: { session in
@@ -98,31 +97,58 @@ public class SlidedeckService {
     }
   }
 
-  private func expose(custom mapping: [(path: String, mappedTo: String)], to server: HttpServer) {
-    mapping.forEach { (path: String, mappedTo: String) in
-      exposeFiles(from: path, pathPrefix: mappedTo, to: server)
-    }
+  private func exposeBundledFiles(to server: HttpServer) {
+    let bundledResourcesPath = Bundle.module.path(forResource: "reveal.js", ofType: "")!
+
+    exposeBundledFiles(from: bundledResourcesPath, pathPrefix: "/", to: server)
   }
 
-  private func exposeFiles(to server: HttpServer) {
-    let distPath = Bundle.module.path(forResource: "reveal.js/dist", ofType: "")!
-    let pluginPath = Bundle.module.path(forResource: "reveal.js/plugin", ofType: "")!
-
-    exposeFiles(from: distPath, pathPrefix: "/dist", to: server)
-    exposeFiles(from: pluginPath, pathPrefix: "/plugin", to: server)
-  }
-
-  private func exposeFiles(from basePath: String, pathPrefix: String, to server: HttpServer) {
+  private func exposeBundledFiles(from basePath: String, pathPrefix: String, to server: HttpServer) {
     if let folder = try? Folder(path: basePath) {
       folder.files.forEach { file in
-        let exposedPath = "\(pathPrefix)/\(file.name)"
-        server[exposedPath] = shareFile(file.url.path)
+        if file.extension != "stencil" {
+          let resource = "reveal.js".appendingPathComponent(pathPrefix).appendingPathComponent(file.name)
+          let url = Bundle.module.url(forResource: resource, withExtension: "")!
+
+          server[pathPrefix.appendingPathComponent(file.name)] = { (HttpRequest) -> HttpResponse in
+            do {
+              let data = try Data(contentsOf: url)
+              let mimeType = self.mimeType(data: data, pathExtension: url.pathExtension)
+
+              return .ok(.data(data, contentType: mimeType))
+            } catch {
+              return .notFound
+            }
+          }
+        }
       }
 
       folder.subfolders.forEach { folder in
-        exposeFiles(from: "\(basePath)/\(folder.name)", pathPrefix: "\(pathPrefix)/\(folder.name)", to: server)
+        exposeBundledFiles(
+          from: basePath.appendingPathComponent(folder.name),
+          pathPrefix: pathPrefix.appendingPathComponent(folder.name),
+          to: server)
       }
     }
+  }
+
+  private func mimeType(data: Data, pathExtension: String) -> String? {
+    let mimeType = Swime.mimeType(data: data)
+
+    if mimeType == nil || mimeType?.mime == "text/plain" {
+      switch pathExtension {
+        case "css":
+          return "text/css"
+
+        case "js":
+          return "text/javascript"
+
+        default:
+          return mimeType?.mime
+      }
+    }
+
+    return mimeType?.mime
   }
 
 

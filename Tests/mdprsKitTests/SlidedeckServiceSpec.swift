@@ -72,11 +72,13 @@ final class SlidedeckServiceSpec: QuickSpec {
       }
 
       it("Reading a file from dist directory") {
+        var mimeType: String? = nil
         var fileData: Data? = nil
         let expectation = XCTestExpectation(description: "Retrieve dist file")
 
         let url = URL(string: "http://localhost:\(service.port)/dist/theme/beige.css")!
         let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
+          mimeType = response?.mimeType
           fileData = data
           expectation.fulfill()
         }
@@ -85,6 +87,7 @@ final class SlidedeckServiceSpec: QuickSpec {
 
         self.wait(for: [expectation], timeout: 10.0)
 
+        expect(mimeType).to(equal("text/css"))
         expect(fileData).toNot(beNil())
         expect(fileData!.count).to(beGreaterThan(0))
 
