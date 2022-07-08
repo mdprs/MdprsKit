@@ -74,5 +74,18 @@ final class ParserSpec: QuickSpec {
       }
     }
 
+    describe("Calculating slide numbers from line numbers") {
+      let url = Bundle.module.url(forResource: "testdata/slidedeck_with_notes.md", withExtension: nil)
+      let markdown = try! String(contentsOf: url!)
+
+      it("Slide number calculation is correct") {
+        expect(Parser.slide(of: 1, in: markdown)).to(equal(1))
+        expect(Parser.slide(of: 4, in: markdown)).to(equal(1))
+        expect(Parser.slide(of: 15, in: markdown)).to(equal(1))
+        expect(Parser.slide(of: 16, in: markdown)).to(equal(2))
+        expect(Parser.slide(of: 21, in: markdown)).to(equal(2))
+      }
+    }
+
   }
 }
