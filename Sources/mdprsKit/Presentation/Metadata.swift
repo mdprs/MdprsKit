@@ -30,6 +30,8 @@ public struct Metadata {
   public let language: String
   public let theme: String
   public let center: Bool
+  public let width: Int
+  public let height: Int
   public let minscale: Double
   public let maxscale: Double
 
@@ -43,6 +45,8 @@ public struct Metadata {
     self.language = dictionary["language"] ?? "en"
     self.theme = dictionary["theme"] ?? "white"
     self.center = Metadata.toBool(dictionary["center"])
+    self.width = Metadata.toInt(dictionary["minscale"], defaultValue: 1440)
+    self.height = Metadata.toInt(dictionary["minscale"], defaultValue: 960)
     self.minscale = Metadata.toDouble(dictionary["minscale"], defaultValue: 0.2)
     self.maxscale = Metadata.toDouble(dictionary["maxscale"], defaultValue: 2.0)
   }
@@ -56,6 +60,14 @@ public struct Metadata {
     }
 
     return false
+  }
+
+  private static func toInt(_ val: String?, defaultValue: Int = 1) -> Int {
+    if let value = val {
+      return Int(value) ?? defaultValue
+    }
+
+    return defaultValue
   }
 
   private static func toDouble(_ val: String?, defaultValue: Double = 1.0) -> Double {
