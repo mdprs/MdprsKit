@@ -42,6 +42,8 @@ public struct Presentation {
       "language": metadata.language,
       "theme": metadata.theme,
       "center": metadata.center,
+      "width": metadata.width,
+      "height": metadata.height,
       "minscale": metadata.minscale,
       "maxscale": metadata.maxscale,
       "slides": slides
