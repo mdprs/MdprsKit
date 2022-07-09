@@ -41,7 +41,7 @@ fileprivate var markdownParser: MarkdownParser = {
 }()
 
 fileprivate func keepMarkdown(html: String, markdown: Substring) -> String {
-  let result = "\n\(String(markdown))\n"
+  let result = markdown.starts(with: "\n") ? "\(String(markdown))\n" : "\n\(String(markdown))\n"
   return result
 }
 
