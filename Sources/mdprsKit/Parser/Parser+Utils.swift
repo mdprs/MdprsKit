@@ -68,7 +68,7 @@ public extension Parser {
     for i in 0..<slideLineRanges.count {
       let slideLineRange = slideLineRanges[i]
 
-      if slideLineRange.from + 1 <= correctedLine && correctedLine <= slideLineRange.to + 1 {
+      if slideLineRange.from <= correctedLine && correctedLine <= slideLineRange.to + 1 {
         return i + 1
       }
     }
