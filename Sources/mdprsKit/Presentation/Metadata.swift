@@ -44,7 +44,7 @@ public struct Metadata {
     self.theme = dictionary["theme"] ?? "white"
     self.center = Metadata.toBool(dictionary["center"])
     self.minscale = Metadata.toDouble(dictionary["minscale"], defaultValue: 0.2)
-    self.maxscale = Metadata.toDouble(dictionary["maxscale"], defaultValue: 0.2)
+    self.maxscale = Metadata.toDouble(dictionary["maxscale"], defaultValue: 2.0)
   }
 
 
