@@ -42,7 +42,7 @@
         <section>
           <style scoped>
           text-align: left;
-          </styleY
+          </style>
           {{ slide }}
         </section>
         {% endfor %}
