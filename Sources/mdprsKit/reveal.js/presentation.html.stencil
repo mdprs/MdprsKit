@@ -61,6 +61,8 @@
         progress: true,
         hash: true,
         center: {{ center }},
+        width: {{ width }},
+        height: {{ height }},
         minScale: {{ minscale }},
         maxScale: {{ maxscale }},
 
