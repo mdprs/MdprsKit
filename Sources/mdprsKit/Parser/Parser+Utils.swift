@@ -63,16 +63,22 @@ public extension Parser {
       return 1
     }
 
+    let lines = slidedeck.components(separatedBy: "\n").dropFirst(headerLineCount)
     let correctedLine = line - headerLineCount
     var slideNum = 1
     var currentLine = 1
+    var inCodeblock = false
 
-    for line in md.html.components(separatedBy: "\n") {
+    for line in lines {
       if currentLine == correctedLine {
         return slideNum
       }
 
-      if line.starts(with: SlideSeparator) {
+      if line.starts(with: "```") {
+        inCodeblock = !inCodeblock
+      }
+
+      if !inCodeblock && line == "---" {
         slideNum += 1
       }
       currentLine += 1
