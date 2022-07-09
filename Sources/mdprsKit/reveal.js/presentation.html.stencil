@@ -59,8 +59,10 @@
       Reveal.initialize({
         controls: true,
         progress: true,
-        center: true,
         hash: true,
+        center: {{ center }},
+        minScale: {{ minscale }},
+        maxScale: {{ maxscale }},
 
         // Learn about plugins: https://revealjs.com/plugins/
         plugins: [RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight, RevealMath.KaTeX]

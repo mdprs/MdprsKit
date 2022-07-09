@@ -29,6 +29,9 @@ public struct Metadata {
   public let description: String
   public let language: String
   public let theme: String
+  public let center: Bool
+  public let minscale: Double
+  public let maxscale: Double
 
 
   // MARK: - Initialization
@@ -39,5 +42,27 @@ public struct Metadata {
     self.description = dictionary["description"] ?? ""
     self.language = dictionary["language"] ?? "en"
     self.theme = dictionary["theme"] ?? "white"
+    self.center = Metadata.toBool(dictionary["center"])
+    self.minscale = Metadata.toDouble(dictionary["minscale"], defaultValue: 0.2)
+    self.maxscale = Metadata.toDouble(dictionary["maxscale"], defaultValue: 0.2)
+  }
+
+
+  // MARK: - Private Static Methods
+
+  private static func toBool(_ val: String?) -> Bool {
+    if let value = val {
+      return Bool(value) ?? false
+    }
+
+    return false
+  }
+
+  private static func toDouble(_ val: String?, defaultValue: Double = 1.0) -> Double {
+    if let value = val {
+      return Double(value) ?? defaultValue
+    }
+
+    return defaultValue
   }
 }
