@@ -82,7 +82,7 @@ public extension Parser {
     var result = [(from: Int, to: Int)]()
 
     slides.forEach { slide in
-      let slideLines = slide.count(of: "\n") + 1
+      let slideLines = slide.replacingOccurrences(of: "\n", with: " \n").count(of: "\n") + 1
 
       result.append((from: firstSlideLine, to: slideLines + firstSlideLine))
       firstSlideLine += slideLines
