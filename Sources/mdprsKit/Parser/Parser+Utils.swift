@@ -21,6 +21,7 @@
 import Foundation
 import Ink
 
+fileprivate let SlideSeparator = "✄✄✄"
 fileprivate var markdownParser: MarkdownParser = {
   return MarkdownParser(modifiers: [
     Modifier(target: .html, closure: keepMarkdown),
@@ -33,9 +34,8 @@ fileprivate var markdownParser: MarkdownParser = {
     Modifier(target: .lists, closure: keepMarkdown),
     Modifier(target: .paragraphs, closure: keepMarkdown),
     Modifier(target: .tables, closure: keepMarkdown),
-
     Modifier(target: .horizontalLines) { _, _ in
-      return Parser.SlideSplitter
+      return "\(SlideSeparator)\n"
     }
   ])
 }()
@@ -46,6 +46,13 @@ fileprivate func keepMarkdown(html: String, markdown: Substring) -> String {
 }
 
 public extension Parser {
+  static func slideCount(in slidedeck: String) -> Int {
+    let md = markdownParser.parse(slidedeck)
+    let slideCount = md.html.count(of: SlideSeparator)
+
+    return slideCount
+  }
+
   static func slide(of line: Int, in slidedeck: String) -> Int? {
     let md = markdownParser.parse(slidedeck)
     let headerLineCount = md.metadata.count > 0 ? md.metadata.count + 2 : 0
@@ -56,21 +63,31 @@ public extension Parser {
     }
 
     let correctedLine = line - headerLineCount
-    let slides = md.html.components(separatedBy: Parser.SlideSplitter)
-    var slideLineOffset = 1
-    var slideNum = 0
+    let slideLineRanges = calculateSlideLineRanges(md.html)
 
-    for i in 0..<slides.count {
-      let slideLineCount = slides[i].count(of: "\n") + 1
+    for i in 0..<slideLineRanges.count {
+      let slideLineRange = slideLineRanges[i]
 
-      if slideLineOffset <= correctedLine && correctedLine <= slideLineOffset + slideLineCount + 1 {
+      if slideLineRange.from + 1 <= correctedLine && correctedLine <= slideLineRange.to + 1 {
         return i + 1
       }
-
-      slideNum = i
-      slideLineOffset = slideLineCount + 1
     }
 
-    return slideNum + 1
+    return slideCount(in: slidedeck)
+  }
+
+  private static func calculateSlideLineRanges(_ slidedeck: String) -> [(from: Int, to: Int)] {
+    let slides = slidedeck.components(separatedBy: SlideSeparator)
+    var firstSlideLine = 1
+    var result = [(from: Int, to: Int)]()
+
+    slides.forEach { slide in
+      let slideLines = slide.count(of: "\n") + 1
+
+      result.append((from: firstSlideLine, to: slideLines + firstSlideLine))
+      firstSlideLine += slideLines
+    }
+
+    return result
   }
 }

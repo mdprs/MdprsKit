@@ -26,4 +26,8 @@ public extension String {
       $1 == needle ? $0 + 1 : $0
     }
   }
+
+  func count(of needle: String) -> Int {
+    return (ranges(of: needle) as [Range<String.Index>]).count + 1
+  }
 }

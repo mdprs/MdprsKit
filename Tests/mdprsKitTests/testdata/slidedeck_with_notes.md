@@ -12,7 +12,6 @@ This are the speaker notes:
 - item 1
 - item 2
 -->
-
 ---
 
 # Slide 2

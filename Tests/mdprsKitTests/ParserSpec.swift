@@ -74,16 +74,21 @@ final class ParserSpec: QuickSpec {
       }
     }
 
-    describe("Calculating slide numbers from line numbers") {
-      let url = Bundle.module.url(forResource: "testdata/slidedeck_with_notes.md", withExtension: nil)
+    describe("Calculating slide numbers") {
+      //let url = Bundle.module.url(forResource: "testdata/slidedeck_with_notes.md", withExtension: nil)
+      let url = Bundle.module.url(forResource: "testdata/mdprs.md", withExtension: nil)
       let markdown = try! String(contentsOf: url!)
+
+      it("Calculating slide count is correct") {
+        expect(Parser.slideCount(in: markdown)).to(equal(4))
+      }
 
       it("Slide number calculation is correct") {
         expect(Parser.slide(of: 1, in: markdown)).to(equal(1))
-        expect(Parser.slide(of: 4, in: markdown)).to(equal(1))
-        expect(Parser.slide(of: 15, in: markdown)).to(equal(1))
-        expect(Parser.slide(of: 16, in: markdown)).to(equal(2))
-        expect(Parser.slide(of: 21, in: markdown)).to(equal(2))
+        expect(Parser.slide(of: 5, in: markdown)).to(equal(1))
+        expect(Parser.slide(of: 8, in: markdown)).to(equal(1))
+        expect(Parser.slide(of: 33, in: markdown)).to(equal(3))
+        expect(Parser.slide(of: 57, in: markdown)).to(equal(4))
       }
     }
 
