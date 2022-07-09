@@ -54,6 +54,7 @@ public extension Parser {
   }
 
   static func slide(of line: Int, in slidedeck: String) -> Int? {
+    // TODO This implementation needs some improvement, since the performance is poor.
     let md = markdownParser.parse(slidedeck)
     let headerLineCount = md.metadata.count > 0 ? md.metadata.count + 2 : 0
 
@@ -63,31 +64,20 @@ public extension Parser {
     }
 
     let correctedLine = line - headerLineCount
-    let slideLineRanges = calculateSlideLineRanges(md.html)
+    var slideNum = 1
+    var currentLine = 1
 
-    for i in 0..<slideLineRanges.count {
-      let slideLineRange = slideLineRanges[i]
-
-      if slideLineRange.from <= correctedLine && correctedLine <= slideLineRange.to + 1 {
-        return i + 1
+    for line in md.html.components(separatedBy: "\n") {
+      if currentLine == correctedLine {
+        return slideNum
       }
+
+      if line.starts(with: SlideSeparator) {
+        slideNum += 1
+      }
+      currentLine += 1
     }
 
-    return slideCount(in: slidedeck)
-  }
-
-  private static func calculateSlideLineRanges(_ slidedeck: String) -> [(from: Int, to: Int)] {
-    let slides = slidedeck.components(separatedBy: SlideSeparator)
-    var firstSlideLine = 1
-    var result = [(from: Int, to: Int)]()
-
-    slides.forEach { slide in
-      let slideLines = slide.replacingOccurrences(of: "\n", with: " \n").count(of: "\n") + 1
-
-      result.append((from: firstSlideLine, to: slideLines + firstSlideLine))
-      firstSlideLine += slideLines
-    }
-
-    return result
+    return slideNum
   }
 }
