@@ -40,6 +40,9 @@
       <div class="slides">
         {% for slide in slides %}
         <section>
+          <style scoped>
+          text-align: left;
+          </styleY
           {{ slide }}
         </section>
         {% endfor %}
