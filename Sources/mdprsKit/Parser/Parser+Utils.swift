@@ -35,7 +35,7 @@ fileprivate var markdownParser: MarkdownParser = {
     Modifier(target: .paragraphs, closure: keepMarkdown),
     Modifier(target: .tables, closure: keepMarkdown),
     Modifier(target: .horizontalLines) { _, _ in
-      return "\(SlideSeparator)\n"
+      return "\n\(SlideSeparator)\n"
     }
   ])
 }()
