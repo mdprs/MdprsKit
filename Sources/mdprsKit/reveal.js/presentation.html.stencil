@@ -41,9 +41,11 @@
         {% for slide in slides %}
         <section>
           <style scoped>
-          text-align: left;
+          div { text-align: left; }
           </style>
+          <div>
           {{ slide }}
+          </div>
         </section>
         {% endfor %}
       </div>
