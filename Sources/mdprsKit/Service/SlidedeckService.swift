@@ -82,7 +82,9 @@ public class SlidedeckService {
     server["/notification"] = websocket(connected: { session in
       self.webSocketSessions.append(session)
     }, disconnected: { session in
-      self.webSocketSessions.removeAll { wss in wss == session }
+      if !self.webSocketSessions.isEmpty {
+        self.webSocketSessions.removeAll { wss in wss == session }
+      }
     })
   }
 
