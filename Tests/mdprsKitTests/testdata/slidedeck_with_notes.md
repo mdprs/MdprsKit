@@ -6,7 +6,7 @@ author: Me
 
 Heyo, this is **slide 1**.
 
-<!--
+<!-- NOTES
 This are the speaker notes:
 
 - item 1

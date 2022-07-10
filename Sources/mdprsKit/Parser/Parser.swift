@@ -68,11 +68,11 @@ public class Parser {
 
   private func processSpeakerNotes(slide: String) -> String {
     var slideWithNotes = slide
-    let speakerNotesMd = slide.substrings(between: "<!--", and: "-->")
+    let speakerNotesMd = slide.substrings(between: "<!-- NOTES", and: "-->")
     let speakerNotesHtml = speakerNotesMd.map({ "<aside>\(markdownParser.parse(String($0)).html)</aside>" })
 
     for i in 0..<speakerNotesMd.count {
-      slideWithNotes = slideWithNotes.replacingOccurrences(of: "<!--\(speakerNotesMd[i])-->", with: speakerNotesHtml[i])
+      slideWithNotes = slideWithNotes.replacingOccurrences(of: "<!-- NOTES\(speakerNotesMd[i])-->", with: speakerNotesHtml[i])
     }
 
     return slideWithNotes
