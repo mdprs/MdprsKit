@@ -43,7 +43,7 @@ final class ParserSpec: QuickSpec {
         expect(presentation!.slides.count).to(equal(3))
 
         for i in 1...3 {
-          expect(presentation!.slides[i - 1]).to(equal("<h1>Slide \(i)</h1>"))
+          expect(presentation!.slides[i - 1].content).to(equal("<h1>Slide \(i)</h1>"))
         }
       }
     }
@@ -61,7 +61,7 @@ final class ParserSpec: QuickSpec {
       it("The slide deck has been parsed successfully and the speaker notes are available") {
         expect(presentation!.slides.count).to(equal(2))
 
-        let speakerNotes = presentation!.slides[0].substrings(between: "<aside>", and: "</aside>")
+        let speakerNotes = presentation!.slides[0].content.substrings(between: "<aside>", and: "</aside>")
         expect(speakerNotes.count).to(equal(1))
         expect(String(speakerNotes[0])).to(equal("<p>This are the speaker notes:</p><ul><li>item 1</li><li>item 2</li></ul>"))
       }

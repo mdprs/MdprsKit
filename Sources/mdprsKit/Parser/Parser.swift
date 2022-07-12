@@ -56,7 +56,9 @@ public class Parser {
       metadata: Metadata(from: md.metadata),
       slides: content
         .components(separatedBy: Parser.SlideSplitter)
-        .map(processSpeakerNotes(slide:)))
+        .map { content -> Slide in
+          Slide(content: processSpeakerNotes(slide: content))
+        })
   }
 
 

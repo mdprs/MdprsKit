@@ -22,12 +22,12 @@ import Foundation
 import PathKit
 import Stencil
 
-public struct Presentation {
+public class Presentation {
 
   // MARK: - Public Properties
 
   public let metadata: Metadata
-  public let slides: [String]
+  public let slides: [Slide]
 
   // MARK: - Private Properties
 
@@ -53,7 +53,7 @@ public struct Presentation {
 
   // MARK: - Initialization
 
-  public init(metadata: Metadata, slides: [String]) {
+  public init(metadata: Metadata, slides: [Slide]) {
     self.metadata = metadata
     self.slides = slides
 
