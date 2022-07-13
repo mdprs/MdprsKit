@@ -3,6 +3,7 @@ title:Markdown Presentation (mdprs)
 author:Thomas Bonk
 description:This presentation documents the feature of mdprs.
 theme: sky
+style-text-align: left
 ---
 
 # Markdown Presentation (mdprs)

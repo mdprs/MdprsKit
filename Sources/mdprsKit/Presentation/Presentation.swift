@@ -27,6 +27,7 @@ public class Presentation {
   // MARK: - Public Properties
 
   public let metadata: Metadata
+  public let styles: [String:String]
   public let slides: [Slide]
 
   // MARK: - Private Properties
@@ -46,6 +47,7 @@ public class Presentation {
       "height": metadata.height,
       "minscale": metadata.minscale,
       "maxscale": metadata.maxscale,
+      "styles": styles,
       "slides": slides
     ]
   }
@@ -53,8 +55,9 @@ public class Presentation {
 
   // MARK: - Initialization
 
-  public init(metadata: Metadata, slides: [Slide]) {
+  public init(metadata: Metadata, styles: [String:String], slides: [Slide]) {
     self.metadata = metadata
+    self.styles = styles
     self.slides = slides
 
     let templatePath = Bundle

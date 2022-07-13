@@ -74,8 +74,32 @@ final class ParserSpec: QuickSpec {
       }
     }
 
+    describe("Parsing styles") {
+      let parser = Parser()
+      let url = Bundle.module.url(forResource: "testdata/mdprs.md", withExtension: nil)
+      let markdown = try! String(contentsOf: url!)
+      var presentation: Presentation!
+
+      it("Parsing the slide deck is successful") {
+        presentation = parser.parse(markdown: markdown)
+      }
+
+      it("text-align style has been parsed successfully") {
+        expect(presentation.styles.keys.first!).to(equal("text-align"))
+        expect(presentation.styles["text-align"]).to(equal("left"))
+      }
+
+      it("text-align style has been parsed successfully") {
+        let html = try presentation.render()
+        let renderedStyles = html.substrings(between: "<style scoped>", and: "</style>")
+
+        expect(html.count).to(beGreaterThan(0))
+        expect(renderedStyles.count).to(beGreaterThan(0))
+        expect(renderedStyles[0].contains("text-align: left;")).to(beTrue())
+      }
+    }
+
     describe("Calculating slide numbers") {
-      //let url = Bundle.module.url(forResource: "testdata/slidedeck_with_notes.md", withExtension: nil)
       let url = Bundle.module.url(forResource: "testdata/mdprs.md", withExtension: nil)
       let markdown = try! String(contentsOf: url!)
 

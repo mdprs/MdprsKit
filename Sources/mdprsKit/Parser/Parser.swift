@@ -53,7 +53,8 @@ public class Parser {
     let content = md.html
 
     return Presentation(
-      metadata: Metadata(from: md.metadata),
+      metadata: Metadata(from: md.metadata.nonStyles),
+      styles: md.metadata.styles,
       slides: content
         .components(separatedBy: Parser.SlideSplitter)
         .map { content -> Slide in
@@ -78,5 +79,35 @@ public class Parser {
     }
 
     return slideWithNotes
+  }
+}
+
+fileprivate extension Dictionary {
+  var nonStyles: [String:String] {
+    var result: [String:String] = [:]
+
+    self.keys.forEach { key in
+      if let k = key as? String {
+        if !k.starts(with: "style-") {
+          result[k] = self[key] as? String
+        }
+      }
+    }
+
+    return result
+  }
+
+  var styles: [String:String] {
+    var result: [String:String] = [:]
+
+    self.keys.forEach { key in
+      if let k = key as? String {
+        if k.starts(with: "style-") {
+          result[k.replacingOccurrences(of: "style-", with: "")] = self[key] as? String
+        }
+      }
+    }
+
+    return result
   }
 }
