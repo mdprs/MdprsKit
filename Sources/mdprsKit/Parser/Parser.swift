@@ -68,14 +68,14 @@ public class Parser {
 
   private func cleanupMath(from markdown: String) -> (String, [String:String]) {
     var replacements: [String:String] = [:]
-    let formulas = markdown.substrings(between: "\\[", and: "\\]")
+    let formulas = markdown.substrings(between: "[math]", and: "[/math]")
     var cleanedUpMarkdown = markdown
 
     formulas.forEach { formula in
       let placeholder = "<!-- formula-\(UUID().uuidString) -->"
 
-      cleanedUpMarkdown = cleanedUpMarkdown.replacingOccurrences(of: "\\[\(formula)\\]", with: placeholder)
-      replacements[placeholder] = "\\[\(String(formula))\\]"
+      cleanedUpMarkdown = cleanedUpMarkdown.replacingOccurrences(of: "[math]\(formula)[/math]", with: placeholder)
+      replacements[placeholder] = String(formula)
     }
 
     return (cleanedUpMarkdown, replacements)
