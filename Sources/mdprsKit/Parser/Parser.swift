@@ -86,6 +86,11 @@ public class Parser {
 
     formulas.keys.forEach { formula in
       result = result.replacingOccurrences(of: formula, with: formulas[formula]!)
+
+      result = result
+        .replacingOccurrences(
+          of: formula.replacingOccurrences(of: "<", with: "&lt;").replacingOccurrences(of: ">", with: "&gt;"),
+          with: formulas[formula]!)
     }
 
     return result
