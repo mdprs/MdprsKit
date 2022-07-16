@@ -49,21 +49,47 @@ public class Parser {
   // MARK: - Public Methods
 
   public func parse(markdown: String) -> Presentation {
-    let md = markdownParser.parse(markdown)
-    let content = md.html
+    let (cleanedUpMarkdown, formulas) = cleanupMath(from: markdown)
+    let md = markdownParser.parse(cleanedUpMarkdown)
+    let content = add(formulas, to: md.html)
 
     return Presentation(
       metadata: Metadata(from: md.metadata.nonStyles),
       styles: md.metadata.styles,
       slides: content
         .components(separatedBy: Parser.SlideSplitter)
-        .map { content -> Slide in
-          Slide(content: processSpeakerNotes(slide: content))
+        .map { slideContent -> Slide in
+          Slide(content: processSpeakerNotes(slide: slideContent))
         })
   }
 
 
   // MARK: - Private Methods
+
+  private func cleanupMath(from markdown: String) -> (String, [String:String]) {
+    var replacements: [String:String] = [:]
+    let formulas = markdown.substrings(between: "\\[", and: "\\]")
+    var cleanedUpMarkdown = markdown
+
+    formulas.forEach { formula in
+      let placeholder = "<!-- formula-\(UUID().uuidString) -->"
+
+      cleanedUpMarkdown = cleanedUpMarkdown.replacingOccurrences(of: "\\[\(formula)\\]", with: placeholder)
+      replacements[placeholder] = "\\[\(String(formula))\\]"
+    }
+
+    return (cleanedUpMarkdown, replacements)
+  }
+
+  private func add(_ formulas: [String:String], to html: String) -> String {
+    var result = html
+
+    formulas.keys.forEach { formula in
+      result = result.replacingOccurrences(of: formula, with: formulas[formula]!)
+    }
+
+    return result
+  }
 
   private func addSlideSplitter(html: String, markdown: Substring) -> String {
     return Parser.SlideSplitter

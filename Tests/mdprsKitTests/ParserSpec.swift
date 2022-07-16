@@ -116,5 +116,22 @@ final class ParserSpec: QuickSpec {
       }
     }
 
+    describe("Parsing with formulas is successful") {
+      let url = Bundle.module.url(forResource: "testdata/slidedeck_with_formulas.md", withExtension: nil)
+      let markdown = try! String(contentsOf: url!)
+      let parser = Parser()
+      var presentation: Presentation!
+
+      it("Parsing the slidedeck is successful") {
+        presentation = parser.parse(markdown: markdown)
+      }
+
+      it("Formulas are process succesfully") {
+        presentation.slides.forEach { slide in
+          expect(slide.content.substrings(between: "\\[", and: "\\]").count).to(equal(1))
+        }
+      }
+    }
+
   }
 }
